@@ -44,15 +44,8 @@
   --global-color-neutral-xxx-dark: #35374d;
   --global-color-neutral-xxxx-dark: #20223a;
 
-  --global-color-xxxx-blue: #1b4186;
-  --global-color-xxx-blue: #2e77e6;
-  --global-color-xx-blue: #3385ff;
-  --global-color-x-blue: #4f95ff;
-  --global-color-border-blue: #81adf0;
-  --global-color-blue: #dceaff;
   /* border stuff */
   --global-borderRadius: 3px;
-  --global-borderRadius-100: 100%;
   --global-borderWidth: 1px;
 
   /* transitions */
@@ -82,6 +75,16 @@
   --global-input-hover-borderColor: var(--global-color-neutral-xx-light);
   --global-input-focus-borderColor: var(--global-color-alpha);
   --global-input-boxShadow: 0 0 0 3px var(--global-color-alpha-x-transparent);
+
+  --global-page-color: var(--global-color-neutral-xxxx-dark);
+  --global-page-backgroundColor: var(--global-color-neutral-xxxx-light);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --global-page-color: White;
+    --global-page-backgroundColor: var(--global-color-neutral-xxxx-dark);
+  }
 }
 
 /*------------------------------------*\
@@ -99,9 +102,17 @@ html {
   font-family: 'Inter Web', Helvetica, arial, sans-serif;
   color: var(--global-color-neutral-xxxx-dark);
   background-color: var(--global-color-neutral-xxxx-light);
+
+  color: var(--global-page-color);
+  background-color: var(--global-page-backgroundColor);
   box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  color: var(--global-page-color);
+  background-color: var(--global-page-backgroundColor);
 }
 
 *,
@@ -531,15 +542,23 @@ input::placeholder {
 }
 
 .c-logo__path--1 {
-  fill: var(--global-color-neutral-xxxx-dark);
+  fill: var(--logo__path--1--fill, var(--global-color-neutral-xxxx-dark));
 }
 
 .c-logo__path--2 {
-  fill: var(--global-color-alpha);
+  fill: var(--logo__path--2--fill, var(--global-color-alpha));
 }
 
 .c-logo__path--3 {
-  fill: var(--global-color-alpha-x-dark);
+  fill: var(--logo__path--3--fill, var(--global-color-alpha-x-dark));
+}
+
+@media (prefers-color-scheme: dark) {
+  .c-logo {
+    --logo__path--1--fill: White;
+    --logo__path--2--fill: var(--logo__path--1--fill);
+    --logo__path--3--fill: var(--logo__path--1--fill);
+  }
 }
 
 /*
@@ -554,6 +573,12 @@ input::placeholder {
   border-radius: var(--global-borderRadius);
   box-shadow: 0 0 0 var(--global-borderWidth) rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.075);
   overflow: hidden;
+}
+
+@media (prefers-color-scheme: dark) {
+  .c-card {
+    background-color: var(--global-color-neutral-xxx-dark);
+  }
 }
 
 /* Add padding to child for more flexibility */
@@ -615,36 +640,42 @@ input::placeholder {
   -moz-appearance: none;
   appearance: none;
   width: 100%;
+  border: var(--global-borderWidth) solid var(--global-input-borderColor);
   border-radius: var(--global-borderRadius);
+  color: var(--global-input-color);
+  background-color: var(--global-input-backgroundColor);
   font-family: inherit;
   font-size: 16px;
   line-height: calc(var(--global-baseline) * 3);
   padding: calc(var(--global-baseline) * 1.5 - var(--global-borderWidth))
     var(--global-whitespace-md);
   outline: none;
-  transition: border var(--global-transition-timing-alpha);
-  border: var(--global-borderWidth) solid var(--global-input-borderColor);
-  background-color: var(--global-input-backgroundColor);
-  color: var(--global-input-color);
+  transition: border var(--global-transitionTiming-alpha);
+}
+
+@media (prefers-color-scheme: dark) {
+  .c-input {
+    background-color: var(--global-color-neutral-xxxx-dark);
+    color: white;
+    border-color: var(--global-color-neutral-xxxx-dark);
+  }
 }
 
 .c-input:hover {
-  border: var(--global-borderWidth) solid var(--global-input-borderColor);
-  background-color: var(--global-input-backgroundColor);
-  color: var(--global-input-color);
   border-color: var(--global-color-neutral-xx-light);
 }
 
 .c-input:focus,
 .c-input:active {
-  border: var(--global-borderWidth) solid var(--global-input-borderColor);
-  background-color: var(--global-input-backgroundColor);
-  color: var(--global-input-color);
   border-color: var(--global-color-alpha);
   box-shadow: 0 0 0 3px var(--global-color-alpha-x-transparent);
 }
 
-/* option input for checkboxes and radio buttons */
+/* 
+
+    option input for checkboxes and radio buttons
+    
+*/
 
 .c-option {
   margin-right: var(--global-whitespace-sm);
@@ -652,76 +683,70 @@ input::placeholder {
 
 .c-custom-option {
   display: flex;
+  align-items: center;
+  --custom-option-borderColor: var(--global-input-borderColor);
+  --custom-option-focus-borderColor: var(--global-input-focus-borderColor);
+  --custom-option-hover-borderColor: var(--global-input-hover-borderColor);
+  --custom-option-input-Color: var(--global-input-color);
 }
-.c-custom-toggle {
+
+.c-custom-option__symbol {
+  opacity: 0;
+  transition: opacity var(--global-transitionTiming-alpha);
 }
 
 .c-custom-option__fake-input {
   display: flex;
-  width: 16px;
-  height: 16px;
-  border: 1px solid var(--global-color-neutral-xxx-light);
-  margin-right: 8px;
-  justify-content: center;
-  align-items: center;
-}
+  width: calc(var(--global-baseline) * 2);
+  height: calc(var(--global-baseline) * 2);
 
-.c-custom-toggle__fake-input {
-}
+  border: var(--global-borderWidth) solid var(--custom-option-borderColor);
 
-.c-custom-option__fake-input--checkbox {
+  margin-right: var(--global-whitespace-sm);
+
   border-radius: var(--global-borderRadius);
+
+  align-items: center;
+  justify-content: center;
 }
+.c-custom-option:hover {
+  --custom-option-borderColor: var(--custom-option-hover-borderColor);
+}
+
 .c-custom-option__fake-input--radio {
-  border-radius: var(--global-borderRadius-100);
+  border-radius: 100%;
 }
-.c-custom-option__symbol {
-  opacity: 0;
-  display: block;
-  transform: scale(1);
-  transition: all 300ms cubic-bezier(0.5, 0, 0.52, 1);
+
+.c-custom-option__fake-input--checkbox .c-custom-option__symbol {
+  /* Stuff for the checkbox icon... */
+  width: calc(var(--global-baseline) * 1.25);
+  height: calc(var(--global-baseline) * 1.25);
+  fill: var(--global-color-alpha);
+}
+
+.c-custom-option__fake-input--radio .c-custom-option__symbol {
+  /* Stuff for the radio button icon... */
+  width: calc(var(--global-baseline) * 0.75);
+  height: calc(var(--global-baseline) * 0.75);
+  background-color: var(--global-color-alpha);
+  border-radius: 100%;
+}
+
+.c-option--hidden:focus + .c-label .c-custom-option__fake-input {
+  border-color: var(--custom-option-focus-borderColor);
 }
 
 .c-option--hidden:checked + .c-custom-option .c-custom-option__symbol {
   opacity: 1;
 }
 
-.c-option--hidden:checked + .c-custom-option .c-custom-option__fake-input {
-  border: 1px solid var(--global-color-border-blue);
-}
-.c-option--hidden:hover + .c-custom-option .c-custom-option__fake-input {
-  border: 1px solid var(--global-color-border-blue);
-}
-.c-option--hidden:focus + .c-custom-option .c-custom-option__fake-input {
-  border: 1px solid var(--global-color-border-blue);
-  box-shadow: var(--global-input-boxShadow);
-}
-.c-custom-option__fake-input--checkbox .c-custom-option__symbol {
-  /*checkbox*/
-  fill: var(--global-color-xx-blue);
-  height: 10px;
-  width: 10px;
-}
-
-.c-custom-option__fake-input--radio .c-custom-option__symbol {
-  /*radio*/
-  background-color: var(--global-color-xx-blue);
-  height: 6px;
-  width: 6px;
-  border-radius: var(--global-borderRadius);
-}
-
 .c-option-list {
-  margin-bottom: 24px;
+  margin-bottom: calc(var(--global-baseline) * 3);
 }
 
 .c-option-list__item {
-  margin-bottom: 12px;
+  margin-bottom: calc(var(--global-baseline) * 1.5);
 }
-
-/*label svg {
-  display: none;
-}*/
 
 /*
     Component: Label
@@ -735,6 +760,12 @@ input::placeholder {
   padding-bottom: var(--global-whitespace-xs);
   line-height: calc(var(--global-baseline) * 2);
   color: var(--global-color-neutral-xx-dark);
+}
+
+@media (prefers-color-scheme: dark) {
+  .c-label {
+    color: var(--global-color-neutral-x-light);
+  }
 }
 
 .c-label--option {
@@ -759,7 +790,7 @@ input::placeholder {
   line-height: calc(var(--global-baseline) * 3);
   width: 100%;
   outline: none;
-  transition: all var(--global-transition-timing-alpha);
+  transition: all var(--global-transitionTiming-alpha);
 }
 
 .c-button:hover {
@@ -775,6 +806,97 @@ input::placeholder {
   box-shadow: none;
 }
 
+/*
+
+    toggle button
+
+*/
+.c-custom-toggle {
+  display: flex;
+  align-items: center;
+}
+.c-custom-toggle__fake-input {
+  display: block;
+  border: var(--global-borderWidth) solid var(--global-input-borderColor);
+  height: calc(var(--global-baseline) * 3);
+  width: calc(var(--global-baseline) * 6);
+  border-radius: calc(var(--global-baseline) * 3);
+  margin-right: var(--global-whitespace-sm);
+  background-color: var(--global-color-neutral-xxxx-light);
+}
+
+@media (prefers-color-scheme: dark) {
+  .c-custom-option__fake-input {
+    background-color: var(--global-color-neutral-xxxx-dark);
+    border-color: var(--global-color-neutral-xxxx-dark);
+  }
+}
+
+.c-custom-toggle__fake-input::after {
+  content: '';
+  display: block;
+  width: 22px;
+  height: 22px;
+  background-color: #fff;
+  border-radius: 999px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.16);
+  transition: all var(--global-transitionTiming-alpha);
+}
+
+.c-option--hidden:checked + .c-custom-toggle .c-custom-toggle__fake-input {
+  background-color: var(--global-color-alpha);
+  border-color: var(--global-color-alpha-dark);
+}
+
+.c-option--hidden:checked + .c-custom-toggle .c-custom-toggle__fake-input::after {
+  transform: translateX(24px);
+}
+
+.c-option--hidden:focus + .c-custom-toggle .c-custom-toggle__fake-input {
+  border-color: var(--global-color-alpha-dark);
+  box-shadow: var(--global-input-boxShadow);
+}
+
+.c-option--hidden:active + .c-custom-toggle .c-custom-toggle__fake-input::after {
+  width: 30px;
+}
+
+.c-option--hidden:active:checked + .c-custom-toggle .c-custom-toggle__fake-input::after {
+  width: 30px;
+  transform: translateX(16px);
+}
+
+.c-toggle-list__item {
+  margin-bottom: calc(var(--global-baseline) * 1.5);
+  padding-top: calc(var(--global-baseline) * 1.5);
+}
+
+.c-custom-toggle--inverted {
+  display: flex;
+  flex-direction: row-reverse;
+  width: 100%;
+  justify-content: space-between;
+}
+
+/*
+
+    select
+    
+*/
+.c-custom-select {
+  display: block;
+  position: relative;
+}
+
+.c-custom-select__symbol {
+  width: calc(var(--global-baseline) * 3);
+  height: calc(var(--global-baseline) * 3);
+  fill: var(--global-color-neutral-x-light);
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  pointer-events: none;
+}
 /*------------------------------------*\
 #UTILITIES
 \*------------------------------------*/
